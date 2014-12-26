@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+var debug = require('debug')('VCFviewer');
+var app = require('../app');
+
+

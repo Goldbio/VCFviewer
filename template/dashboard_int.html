@@ -1,0 +1,309 @@
+<!-- Status bar  -->
+<nav class='navbar navbar-default' role='navigation' id='project-navbar'>
+	<div class="navbar-collapse" >
+		<ul class='nav navbar-nav'>	
+			<li class='dropdown'>
+				<button class='btn  btn-default navbar-btn dropdown-toggle' data-toggle="dropdown">
+					<span class='glyphicon glyphicon-align-justify'></span>
+					<span class="caret"></span>
+				</button>
+
+				<ul class="dropdown-menu" role="menu">
+					<li ng-repeat="project in userProject | orderBy:'-date'" ng-click='showProject($index)'><a href=''>{{ project.title }}</a></li>
+				</ul>
+			</li>
+
+			<!--li class='navbar-form'  >
+				<div class='input-group'>
+					<input type="text" class="form-control"  placeholder="Title" ng-model='projectTitle'>
+					<span class="input-group-btn">
+				       	<button class="btn btn-primary" type="button" ng-click='addProject(projectTitle)'>
+							<span class='glyphicon glyphicon-plus'></span>
+							Add project</button>
+						</button>
+					</span>
+				</div>
+			</li-->
+		</ul>
+		<button  class='btn btn-default navbar-btn navbar-right' ng-click='deleteProject()' >
+				<span class='glyphicon glyphicon-trash'></span>
+		</button>
+
+		<button  class='btn btn-default navbar-btn navbar-right' ng-click='addProject()' >
+				<span class='glyphicon glyphicon-plus'></span>
+				Project
+		</button>
+
+	</div>
+</nav>
+	
+	
+</div>
+
+<!-- Sidebar for project -->
+<div class='col-md-3'>
+	<div class='panel panel-default'>
+		<div class='panel-heading' >
+			Title
+
+		</div>
+
+		<div id='title' class='panel-collapse '>
+			<div name='title' class='panel-body' contenteditable>
+			</div>
+		</div>
+
+	</div>
+
+
+	
+	<div class='panel panel-default'>
+		<div class='panel-heading' > 
+			Summary	
+		</div>
+
+		<div id='summary' class='panel-collapse'>
+			<div name='summary' class='panel-body' contenteditable>
+			</div>
+		</div>
+
+	</div>
+
+
+	<div class='panel panel-default'>
+		<div class='panel-heading' >
+			Files	
+	
+		</div>
+
+		<div id='files' class='panel-collapse'> 
+			<table  class='table'>
+				<tr ng-repeat='file in userProject[index].files' >
+					<td class='col-md-7 file' > {{ file.name }} </td>
+					<td class='col-md-4' >
+						<!-- Group define -->
+						<div class="dropdown">
+							<button class="btn btn-primary " type="button" id="dropdownMenu1" data-toggle="dropdown" -->
+								{{ file.class }}
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+								<li role="presentation" ng-repeat='class in userProject[index].class' ng-click='setFileClass(file.name,class)'><a role="menuitem" tabindex="-1" href=""> {{ class }} </a></li>
+								<li role="presentation" class="divider"></li>
+								<li role="presentation" ng-click='addClass(newClassName, $event)'>
+									<input type='text'  ng-model='newClassName'>
+									<a role="menuitem" tabindex="-1" href=""><span class='glyphicon glyphicon-plus' ></span>Add class</a>
+								
+								</li>
+							</ul>
+						</div>
+
+					</td>
+					<td class='col-md-1'><span class='glyphicon glyphicon-trash' ng-click='deleteFile(file)'></span></td>
+				</tr>
+				<tr ng-repeat='item in uploader.queue'>
+					<td class='col-md-9'>{{ item.file.name }}</td>
+					<td class='col-md-3' colspan=3>
+						<div class="progress">
+  							<div class="progress-bar progress-bar-success progress-bar-striped active " role="progressbar" ng-style="{ 'width': item.progress + '%' }" >
+  							</div>
+						</div>	
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan=12>
+						<span class='btn btn-primary btn-file btn-sm col-md-6'>
+							<span class='glyphicon glyphicon-file'></span>
+							Add files<input type="file" nv-file-select uploader='uploader' multiple  >
+					 	</span>
+	
+					</td>
+				</tr>
+			</table>
+
+		</div>
+
+	</div>
+
+
+	<div class='panel panel-default'>
+		<div class='panel-heading' ng-model='members' >
+			Members	
+		</div>
+
+		<ul id='members' class='panel-collapse list-group'>
+			<li class='list-group-item'>
+				<span ng-repeat='member in userProject[index].users'>
+					{{ member.email}}
+				</span>
+			</li>
+
+			<li class='list-group-item'>
+				<div class='' ng-repeat='chat in chatlog'>
+					<span><em>{{ chat.user }} ::</em>  {{ chat.chat }} </span>
+				</div>
+				
+			</li>
+			<li class='row list-group-item'>
+				<div class='col-md-12'>
+					<textarea class='form-control' ng-model='chat'  ></textarea>
+				</div>
+
+			</li>
+		</ul>
+
+
+
+
+	</div>
+	
+</div>
+
+
+<div class='col-md-9 contentPane'>
+	<!-- Project stats -->
+	<div class='section'>
+		<div class='row'>
+
+				<span class='project_stat'> {{ userProject[index].files.length }}</span> VCF samples
+				<span class='project_stat'> {{ projectQS.toFixed(2) }}</span> average quality score
+				<span class='project_stat'> {{ projectDP.toFixed(2) }}</span> average depth
+		</div>
+	
+		<div class='row' id='chr_dist_plot'>
+			
+
+		</div>
+	</div>
+
+	<!-- File stats -->
+	<div class='section'>
+		<table class='table'> 
+			<tr>
+				<th>VCF file</th>
+				<th>#Variants</th>
+				<th>Mean QS</th>
+				<th>Mean DP</th>
+			</tr>
+			<tr ng-repeat='file in userProject[index].files' >
+				<td ng-click="plotSinglePane( file.name,'file' )">{{ file.name }}</td>
+				<td>
+					<draw-line length='{{file.numVariants / maxVariants *100 }}'></draw-line>
+				</td>
+				<td>
+					<draw-line length='{{file.totQS / file.numVariants/ maxMeanQS*100 }}' val='{{ file.totMeanQS }}' ></draw-line>
+				</td>
+				<td>
+					<draw-line length='{{file.totDP/ file.numVariants / maxMeanDP*100 }}' val='{{ file.totMeanDP }}' ></draw-line>
+				</td>
+
+				<!--td>
+					<area-plot data={{file.QS_dist}} name="{{file.name}}_QS"></area-plot>
+				</td>
+				<td>
+					<area-plot data={{file.DP_dist}} name="{{file.name}}_DP"></area-plot>
+				</td-->
+		
+
+			</tr>
+		</table>
+	</div>
+
+	<!-- Signle and group view  -->
+	<div class='section'>
+		<ul class="nav nav-tabs" role="tablist">
+		  <li class="active"><a href="">File view </a></li>
+		  <li><a href=''>Case-control comparison</a></li>
+		</ul>
+		
+		<div id='filePane'></div>
+
+	</div>
+</div>
+
+<!-- VCF explorer>
+<div class='col-md-9 contentPane'>
+	<div class='panel panel-default ' >
+		<div class='panel-heading' >
+			VCF Explore
+		</div>
+
+		<div class='panel-body'>
+			<h4>Group comparison calculator </h4>
+			<div id='calceditor' class='well' >
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="input-group">
+							<div >
+
+								<add-class-html type='Case'></add-class-html>
+								<add-operator-html type='∩'></add-operator-html>
+								<add-class-html type='Control'></add-class-html>
+
+								<span class='glyphicon glyphicon-plus' ng-click='addCalc($event)'></span>
+
+							
+							</div>
+							<span class="input-group-btn">
+								<button class="btn btn-primary" type="button" ng-click='doCalc()'>=</button>
+							</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			
+			<div class='row'>
+				<h4 class='col-md-2'>File viewer</h4>
+				<div class='col-md-10'>
+					<div class="dropdown">
+					  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+						<span id='selectedViewFile'>Select file or group</span>
+						<span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+						<li role="presentation" class="dropdown-header">Files</li>
+						<li role="presentation" ng-repeat='file in userProject[index].files' ng-click="plotSinglePane(file.name,'file')" ><a role="menuitem" tabindex="-1" href="">{{ file.name }}</a></li>
+						<li role="presentation" class="divider"></li>
+						<li role="presentation" class="dropdown-header">Groups</li>
+
+						<li role="presentation" ng-repeat='group in userProject[index].class' ng-click="plotSinglePane(group, 'group')"><a role="menuitem" tabindex="-1" href="">{{ group }} </a></li>
+					  </ul>
+					</div>	
+				</div>
+			</div>
+			
+			<div id='singlePane' class='well'>
+
+			</div>
+
+			<h4>Group comparision result</h4>
+			<div id='groupPane' class='well'>
+			</div>
+			
+		</div>
+
+	</div>
+
+</div-->
+
+
+<!-- File download progress  -->
+
+<div class="modal file-download">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class='modal-header'>
+				<h4>VCF file downloading... </h4>
+			</div>
+			<div class="modal-body">
+				<div class="progress progress-popup">
+					<div class="progress-bar progress-bar-success progress-bar-striped active"  aria-valuemin="0" aria-valuemax="100" ></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

@@ -1,0 +1,408 @@
+<!-- Menu with absolute position -->
+<div class='project-select-btn menu-open-btn'>
+	<span class='glyphicon glyphicon-align-justify'></span>
+</div>
+
+<div class='filter-btn menu-open-btn'>
+	<span class='glyphicon glyphicon-filter'></span>
+</div>
+
+<!-- Project selector Box -->
+<div id='project_select_box' class='col-xs-3 box'>
+	<div class='row box_title'>
+		<div class='col-xs-10 col-xs-push-2 vertical-align' >
+			Project selector
+		</div>
+		
+	</div>
+
+	<div class='row list_item' ng-repeat='project in userProject' >
+		<div class='col-xs-10' spellcheck='false'  >
+			<!--span name='title'>{{project.title}}</span-->
+			{{ project.title }}
+		</div>
+		<div class='col-xs-2 '>
+
+			<button type="button" class="btn btn-danger btn-xs" ng-click='showProject($index)'>
+				<span class='glyphicon glyphicon-log-in'></span>
+			</button>
+			<button type="button" class=" btn btn-danger btn-xs" ng-click='deleteProject($index)'>
+				<span class='glyphicon glyphicon-trash'></span>
+			</button>
+
+		</div>
+	</div>
+
+	<div class='row list_item' ng-click='addProject()'>
+		<div class='col-xs-12 vertical-align'>
+			<span class='glyphicon glyphicon-plus'></span>
+			Add Project
+		</div>
+	</div>
+
+</div>
+
+<!-- Main view Box  -->
+<div id='mainview' class='row box'>
+ <div class='container-non-responsive'>
+	<!-- File Tab -->
+	<div class='col-xs-3' id='file_tab' >
+		<div class='row box_title'>
+			<div class='col-xs-10 col-xs-push-2 vertical-align'>
+				<span>{{ userProject[index].title }}</span>
+			</div>
+		</div>
+
+		<div class='scroll_box'>
+			<div class='row list_item {{file.status}}' ng-repeat='file in userProject[index].files'>
+				<div class='col-xs-12'>
+					<span class='file_name' ng-click='showFileView(file.name, $index)'>{{ file.name}}</span>
+					<!--span class="label label-danger" ng-show="file.status=='processing'">{{ file.status }}</span-->
+					<span class='progress' ng-show="file.status=='processing'">
+						<span class="progress-bar progress-bar-striped progress-bar-danger active"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+							{{ file.status }}
+						</span>
+					</span>
+
+					<span class='dropdown'>
+						<button class='btn btn-default btn-xs file_class' data-toggle='dropdown'>{{ file.class }} <span class="caret"></span></button>
+						<ul class='dropdown-menu' role='menu'  >
+							<li ng-repeat='class in userProject[index].class' ng-click='setFileClass(file.name,class)' ><a href='' role='menuitem' >{{ class }}</a></li>
+							<li class='divider'></li>
+							<li ng-click='addClass(newClassName, $event)'>
+								<input type='text' ng-model='newClassName'>
+								<a role='menuitem' href=''><span class='glyphicon glyphicon-plus'></span>Add class</a>
+							</li>
+
+						</ul>
+					</span>
+
+
+					<span class='label label-default file_delete_btn' ng-click='deleteFile( file.name )'>
+						<span class=' glyphicon glyphicon-trash'></span>
+					</span>
+				</div>
+			</div>
+
+			<div class='row list_item' ng-repeat='item in uploader.queue'>
+				<div class='col-xs-12'>
+					<span class='file_name'>{{ item.file.name }}</span>
+					<div class='progress'>
+						<div class="progress-bar progress-bar-success progress-bar-striped active " role="progressbar" ng-style="{ 'width': item.progress + '%' }" >
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class='row list_item'  >
+				<div class='col-xs-12 btn-file vertical-align' id='addFileButton'>
+					<span class='glyphicon glyphicon-plus'></span>Add VCF files
+					<input type="file" nv-file-select uploader='uploader' multiple>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Content Tab -->
+	<div class='col-xs-9' id='content_tab'>
+		<div class='row menubar'>
+			<div class='col-xs-12'>
+				<div class='text-center menu' ng-click='showOverview(); showMDSplot()'>
+					<span class='glyphicon glyphicon-home'  ></span>
+					<p>Overview</p>
+				</div>
+
+				<div class='text-center menu' ng-click='showFileView(userProject[index].files[0].name,0 )'>
+					<span class='glyphicon glyphicon-floppy-disk' ></span>
+					<p>File view</p>
+				</div>
+			
+				<div class='text-center menu' >
+					<span class='glyphicon glyphicon-stats'></span>   
+					<p>Group comparison</p>
+				</div>
+
+			</div>
+		</div>
+
+		<div id='overview_content' class='content'>
+			<div class='row overview_summary'>
+				<div class='col-xs-12 temp'>
+					<div class='row'>
+						<div class='col-xs-2 overview_sub_title'>
+							Project title
+						</div>
+						<div class='col-xs-9 well-sm well' attr='title' spellcheck='false' contenteditable ng-model='userProject[index].title' project-id='{{userProject[index]._id}}'>
+							{{ userProject[index].title }}
+						</div>
+					</div>
+
+					<div class='row'>
+						<div class='col-xs-2 overview_sub_title'>
+							Summary
+						</div>
+						<div class='col-xs-9 well-sm well' attr='summary' spellcheck='false' contenteditable ng-model='userProject[index].summary' project-id='{{userProject[index]._id}}'>
+							{{ userProject[index].summary }}
+						</div>
+						
+					</div>
+
+					<div class='row'>
+						<div class='col-xs-2 overview_sub_title'>
+							Users
+							<button type="button" class="btn btn-info btn-xs"   ng-click='showAddUserModal()'><span class='glyphicon glyphicon-plus'></span>Invite users</button>
+						</div>
+						<div class='col-xs-9 well well-sm'>
+							<span  class='{{ user.status }}'  ng-repeat='user in userProject[index].users'>
+								<span>{{ user.email }} </span>
+								<span class='dropdown'>
+									<button class='btn btn-danger btn-xs dropdown-toggle' ng-class="{disabled: loggedUser == user.email }" type='button' data-toggle='dropdown' >{{ user.role }} <span class='caret'></span></button>
+									<ul class='dropdown-menu'>
+										<li ><a role='' ng-click="setUserRole( user, 'Audit')">Audit</a></li>
+										<li ><a role='' ng-click="setUserRole( user,'Admin' )">Admin</a></li>
+									</ul>
+								</span>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+			<div class='row mulTemp'>
+				<div class='col-xs-6'> 
+					<div class='row flex_parent'>
+						<div class='col-xs-12 flex_child'>
+							<div class='row plot_title_row'>
+								<span>MDS plot</span>
+							</div>
+							<div class='row multi_plot_MDS plot'></div>
+
+						</div>
+					</div>
+
+				</div>
+
+
+				<div class='col-xs-6'> 
+					<div class='row flex_parent'>
+						<div class='col-xs-12 flex_child'>
+							<div class='row plot_title_row'>
+								<span>Variants statistics</span>
+							</div>
+							<div class='row multi_plot_VC plot'></div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class='row mulTemp'>
+				<div class='col-xs-6 '>
+					<div class='row flex_parent'>
+						<div class='col-xs-12 flex_child'>
+							<div class='row plot_title_row'>
+									<span>Quality score distribution</span>
+							</div>
+							<div class='row  multi_plot_QS plot'></div>
+						</div>
+					</div>
+
+				</div>
+
+				<div class='col-xs-6 '>
+					<div class='row flex_parent'>
+						<div class='col-xs-12 flex_child'>
+							<div class='row plot_title_row'>
+									<span>Read depth distribution</span>
+							</div>
+							<div class='row multi_plot_DP plot'></div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+
+		</div>
+
+		<div id='group_content' class='content hidden row flex_parent'>
+			<div class='col-xs-12 flex_child'>
+				<div class='row plot_title_row' >
+						<span> Group comparison calculator</span>
+				</div>
+
+				<div class='row plot'  id='calceditor'>
+					<div id='calculator' class='col-xs-9 col-xs-push-1 vertical-align'> 
+						<add-class-html type='Case'></add-class-html>
+						<add-operator-html></add-operator-html>
+						<add-class-html type='Control'></add-class-html>
+						<!--button type="button" class="btn btn-default  " ng-click='addCalc($event)'>
+							+
+						</button-->
+
+					</div>
+					<div id='calculator_submit_btn'  class='col-xs-2 col-xs-push-1 vertical-align' ng-click='doCalc()' >
+
+							Calculate! 
+					</div>
+				</div>
+			</div>
+		</div>
+	
+
+		<div id='variants_content' class='row  content hidden'>
+			<div class='col-xs-12'>
+				<div class='row flex_parent'>
+					<div class='col-xs-12 flex_child'>
+						<div class='row plot_title_row'>Variant summary</div>
+						<div class='row plot_summary plot'></div>
+					</div>
+				</div>
+
+				<div class='row flex_parent'>
+					<div class='col-xs-12 flex_child'>
+						<div class='row plot_title_row'>Variants</div>
+						<div class='row plot_table plot'></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+ </div>
+</div>
+
+<!-- Filter box -->
+<div id='filter_box' class='col-xs-3  col-xs-push-9  box'>
+	<div class='row box_title'>
+		<div class='col-xs-12 vertical-align'>
+			VARIANTS FILTER
+		</div>
+	</div>
+
+	<div class='filter_scroll_box row'>
+	  <div class='col-xs-12'>
+		<div class='row flex_parent'>
+			<div class='col-xs-12 flex_child'>
+				<div class='row plot_title_row'>Quality score</div>
+				<div class='row filter plot_QS plot'></div>
+
+			</div>
+		</div>
+
+		<div class='row flex_parent'>
+			<div class='col-xs-12 flex_child'>
+				<div class='row plot_title_row'>Read depth</div>
+				<div class='row filter plot_DP plot'></div>
+							
+
+			</div>
+		</div>
+
+		<div class='row flex_parent'>
+			<div class='col-xs-12 flex_child'>
+				<div class='row plot_title_row'>Amino acids substitution</div>
+				<div class='row filter plot_AAS plot'></div>
+
+			</div>
+		</div>
+
+		<div class='row flex_parent'>
+			<div class='col-xs-12 flex_child'>
+				<div class='row plot_title_row'>Novel variants</div>
+				<div class='row filter plot plot_NV'></div>
+			</div>
+		</div>
+
+		<div class='row flex_parent'>
+			<div class='col-xs-12 flex_child'>
+				<div class='row plot_title_row'>Repetition</div>
+				<div class='row filter plot plot_RE'></div>
+			</div>
+		</div>
+
+		<div class='row flex_parent'>
+			<div class='col-xs-12 flex_child'>
+				<div class='row plot_title_row'>Clinical significance</div>
+				<div class='row filter plot plot_CS'></div>
+			</div>
+		</div>
+
+		<div class='row flex_parent'>
+			<div class='col-xs-12 flex_child'>
+				<div class='row plot_title_row'>Genomic region</div>
+				<div class='row filter plot plot_GR'></div>
+			</div>
+		</div>
+
+		<div class='row flex_parent'>
+			<div class='col-xs-12 flex_child'>
+				<div class='row plot_title_row'>G/T</div>
+				<div class='row filter plot plot_GT'></div>
+			</div>
+		</div>
+	  </div>
+	</div>
+
+
+</div>
+
+<!-- File download progress  -->
+
+<div class="modal file-download">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class='modal-header'>
+				<h4>VCF file downloading... </h4>
+			</div>
+			<div class="modal-body">
+				<div class="progress progress-popup">
+					<div class="progress-bar progress-bar-success progress-bar-striped active"  aria-valuemin="0" aria-valuemax="100" ></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Group comaprison  progress  -->
+
+<div class="modal calc-progress">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class='modal-header'>
+				<h4>Calculating ...  </h4>
+			</div>
+			<div class="modal-body">
+				<div class="progress progress-popup">
+					<div class="progress-bar progress-bar-success progress-bar-striped active"  aria-valuemin="0" aria-valuemax="100" ></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- Modal for addUser -->
+<!-- Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Invite co-worker </h4>
+      </div>
+      <div class="modal-body">
+	  	<div class="form-group">
+			<input type="email" class="form-control" id="inviteEmail" placeholder="Enter email to invite">
+		</div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click='addUser()'>Invite user</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<h1>{{user.id}}</h1>
+<form role='form' class='signup' id='signupForm'>
+	<div class="form-group">
+		<label for="email">Email </label>
+		<input type="email" class="form-control" id="email" placeholder="Enter email" ng-model="user.id"  >
+	</div>
+
+	<div class='form-group'>
+		<label form='password'>Password</label>
+		<input type='password' class='form-control' id=password' placeholder='Password' ng-model='user.pw'>
+	</div>
+
+	<div class='form-group'>
+		<label form='password'>Password</label>
+		<input type='password' class='form-control' id=password_confirm' placeholder='Password confirm' ng-model='user.pwConfirm'>
+	</div>
+
+
+	<button type='submit' class='btn btn-default'> Submit </button>
+</form>
+

@@ -1,0 +1,18 @@
+<form role='form' class='login' id='loginForm'>
+	<h1>Log In</h1>
+	<div class="form-group">
+		<label for="email">Email </label>
+		<input type="email" class="form-control" id="email" placeholder="Enter email" ng-model='user.id'>
+	</div>
+
+	<div class='form-group'>
+		<label form='password'>Password</label>
+		<input type='password' class='form-control' id=password' placeholder='Password' ng-model='user.pw'>
+
+	</div>
+
+	<button type='submit' class='btn btn-default btn-success btn-sm' ng-click='login(user)'> LOG IN	 </button>
+	<div>
+		If you don't have an account, <a href='#signup'>Create an account</a>
+	</div>
+</form>

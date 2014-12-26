@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app='frontPage'>
+	<head>
+		<meta charset='utf-8'>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>VCF viewer</title>
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+
+		<link rel='stylesheet' href='template_css/dashboard.css'>
+		<link rel='stylesheet' href='vcf_display_css/VCF.css'> 
+		<link rel='stylesheet' href='template_css/home.css'>
+
+		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<script src="https://cdn.socket.io/socket.io-1.1.0.js"></script> <!-- socket.io client script -->
+		<script src='bower_components/angular/angular.js'></script>
+		<script src='bower_components/angular-route/angular-route.js'></script>
+		<script src='bower_components/underscore/underscore.js'></script>
+		<script src='template_js/angular-file-upload.min.js'></script>
+		<script src='template_js/index_angular.js'></script>
+		<script src='template_js/plots.js'></script>
+
+		<!--  js for VCF display -->
+		<script src="vcf_display_js/lib/d3.js" charset="utf-8"></script> 
+		<script src="vcf_display_js/lib/crossfilter.js" charset="utf-8"></script> 
+		<script src="vcf_display_js/lib/dc.js" charset="utf-8"></script>
+		<script src="vcf_display_js/lib/ZeroClipboard.js" charset="utf-8"></script>  
+		<script src='vcf_display_js/VCF.js'></script>
+
+
+	</head>
+
+	<body  >
+			<nav ng-controller='statusBarCtrl' class='navbar navbar-inverse navbar-static-top' >
+
+					<a class="navbar-brand" href="#">VCFviewer</a>
+					<!--
+						<p class="navbar-text navbar-right"> <a href="#signup" class="navbar-link">Sign Up</a></p>
+					-->
+					<ul class='nav navbar-nav navbar-right'>
+						<li class='dropdown'>
+
+								<a href='' class='dropdown-toggle user_account' data-toggle='dropdown'  ng-show='validToken' ><span show-user-symbol  class='glyphicon glyphicon-user' ></span>{{username}}</a>
+								<a href="#login" class="navbar-link" ng-hide='validToken'>Sign In</a>
+								<ul class='dropdown-menu' role='menu' >
+									<li><a href='#dashboard_temp' role='menuitem'>Dashboard</a></li-->
+									<li ><a href='/' role='menuitem' ng-click='logout()'>Log out</a></li>
+
+								</ul>
+						</li>
+					</ul>
+			</nav>
+
+			<ng-view></ng-view> 
+
+	</body>
+
+</html>

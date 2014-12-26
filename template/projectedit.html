@@ -1,0 +1,80 @@
+<div class='row'>
+  <div class='col-md-10 col-md-offset-1'>
+
+	<div class="panel panel-primary ">
+		<div class='panel-heading'>Project editor</div>
+		<div class='panel-body'>
+			
+			<form class='form-horizontal' role='form'>
+				<div class='form-group'>
+					<label for='title' class='col-md-2'>Title</label>
+					<div class='col-md-10'>
+						<input ng-model='project_title' type='text' class='form-control' id='title'>
+					</div>
+				</div>
+
+
+				<div class='form-group'>
+					<label for='summary' class='col-md-2'>Summary</label>
+					<div class='col-md-10'>
+						<textarea  ng-model='project_summary' class='form-control' rows=3 id='summary'></textarea>
+					</div>
+				</div>
+
+				<div class='form-group'>
+					<label for='file' class='col-md-2'>Files</label>
+					<div class='col-md-10'>
+					 	<input ng-file-select type="file" on-read-file='checkValidVCF($filesContent)' multiple  >
+						<!-- Read files and display below -->
+						<table id='file_list_table' class='table'>
+							<tr ng-repeat='item in uploader.queue'>
+								<td>{{item.file.name}}</td>
+								<td>{{item.file.size/1024/1024|number:2}}MB</td>
+								<td> {{ isVCF( item.file.name ) }} </td>
+								<td>
+								
+									<div class='progress' style='margin-bottom:0;'>
+										<div class='progress-bar' role='progressbar' ng-style="{'width': item.progress + '%'}"></div>
+									</div>
+								</td>
+							</tr>
+							
+						</table>
+
+					</div>
+				</div>
+
+				<div class='col-md-2 col-md-offset-5'>
+					<button type="submit" class="btn btn-danger btn-loading" ng-click="createProject()" data-loading-text='Saving...'>Create</button>	
+				</div>
+			</form>		
+	
+		</div>
+		<div class='panel-footer'  ng-show='doneUpload'>
+			<div class="alert alert-success" role="alert"> 
+				Created new project successfully! <a href='#dashboard' class='alert-link' > Start managing your project </a>
+			</div>
+
+
+		</div>
+	</div>
+
+  </div
+</div>
+
+<!-- Alert dialog  -->
+
+<div id='noVCFAlert' class='modal fade' tabindex='-1' role='dialog' aria-labelledby="mySmallModalLabel" aria-hidden="true" >
+	<div class='modal-dialog modal-sm modal-vertical-centered '>
+		<div class='modal-content'>
+			<div class='modal-body'>
+				No VCF file selected! At least one VCF file should be uploaded
+			</div>
+
+			<div class='modal-footer'>
+				<button type='button' class='btn btn-danger' data-dismiss='modal'>Close</button>
+		</div>
+	
+	</div>
+
+</div>

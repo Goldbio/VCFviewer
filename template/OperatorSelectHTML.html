@@ -1,0 +1,12 @@
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			 <span class='selectedOperator'>&cap;  </span>
+			 <span class="caret"></span>
+		</button>
+
+		<ul class="dropdown-menu" role="menu">
+		  <li role="presentation" ng-click='selectCalcOperator(operator,$event)' ng-repeat="operator in ['∩','U','-']"><a href=''>{{operator}}</a></li>
+		</ul>
+	</div>
+
+

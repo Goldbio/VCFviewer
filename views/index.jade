@@ -1,0 +1,40 @@
+extends layout
+
+block content
+	div(class='col-md-8 col-md-push-2')
+		h1 #{title}
+		input(id='files-upload' type='file' class='form-control' multiple)
+
+		table(id='file_list_table', class='table')
+		
+		div(id='vcf_visualizer')
+  
+	script.
+		$('#files-upload').change( function(){
+			var file2upload = new FormData();
+			var files = this.files;
+
+			for( var i=0; i< files.length ; i++){
+				var filename_json= files[i].name.replace('vcf','json');
+				file2upload.append(files[i].name, files[i] );
+				$('#file_list_table').append('<tr><td>'+files[i].name+'</td><td><button class="btn" file='+filename_json+'>Display</button></td></tr>');
+			} 
+
+			$.ajax({
+				url:'/upload', 
+				data:file2upload , 
+				processData: false,
+				contentType: false,
+				type:'POST',
+				success: function(d){
+				}
+			});
+		});
+
+		$('#file_list_table').on('click', 'button', function(){
+			// Download file from S3 server
+			$.getJSON('http://vcfjson.s3.amazonaws.com/'+$(this).attr('file')+'?jsoncallback=?', function(vcf_json){
+				// Visualize VCF file 
+				$('#vcf_visualizer').append( vcf_json );
+			});
+		});

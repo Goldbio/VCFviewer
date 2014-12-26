@@ -1,0 +1,14 @@
+
+	
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			 <span class='selectedClass'>{{ userProject[index].class[1] }}</span>
+			 <span class="caret"></span>
+		</button>
+
+		<ul class="dropdown-menu" role="menu">
+		  <li role="presentation" ng-click='selectCalcClass(class,$event)' ng-repeat='class in userProject[index].class'><a href=''>{{class}}</a></li>
+		</ul>
+	</div>
+
+

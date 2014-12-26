@@ -1,0 +1,122 @@
+<div class='project-select-btn ' ng-click='project_select_btn()'>
+	<span class='glyphicon glyphicon-align-justify'></span>
+</div>
+
+<!-- Project Menubar -->
+<div class='row menubar'>
+
+	<div class='col-md-3 project-file vertical-align'>
+		<span class='project-title '> {{ userProject[index].title}}</span>
+	</div>
+
+	<div class='col-md-3 project-list vertical-align hidden'>
+		<span > SELECT Project</span>
+		<button type="button" class="btn btn-primary">Close</button>
+
+	</div>
+
+	<div class='col-md-6'>
+		<div class='text-center menu' ng-click='showOverview()'>
+			<span class='glyphicon glyphicon-home'  ></span>
+			<p>Overview</p>
+
+		</div>
+		<div class=' text-center menu' ng-click='showFileView(userProject[index].files[0].name)'>
+			<span class='glyphicon glyphicon-floppy-disk' ></span>
+			<p>File view </p>
+		</div>
+		<div class=' text-center menu' ng-click='showGroupView()' >
+			<span class='glyphicon glyphicon-stats'></span>
+			<p>Group coparison</p>
+		</div>
+	</div>
+	
+	<div class='col-md-3 text-center   vertical-align filter-title'>
+		VARIANTS FILTER
+	</div>
+
+</div>
+
+<!-- Main view -->
+
+<div class='row mainview'>
+	<div class='col-md-3 leftTab'>
+		<!-- Project file tab-->
+		<div class='row project-file' ng-repeat='file in userProject[index].files ' ng-click='showFileView(file.name, $event)'>
+			<div class='col-md-12 '>
+				<div>
+					{{ file.name }}
+				</div>
+				<div>
+					<span class='label label-default' >{{ file.class}}</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- Project select tab -->
+		<div class='row project-list hidden ' ng-repeat='project in userProject' ng-click='showProject($index)'>
+			<div class='col-md-12 ' >
+				{{ project.title }}
+			</div>
+		</div>
+
+		<!-- Group view tab -->
+		<div class='row calculator hidden'>
+			<div class='col-md-12'>
+				calculator
+
+
+			</div>
+		</div>
+	</div>
+
+	<div class='col-md-6 centerTab'>
+		<span class='panel_title'>Variants</span>
+
+	</div>
+
+	<div class='col-md-3 rightTab'>
+		<div class='row filter'>
+			<div class='col-md-12 filter_QS'>
+				<span class='panel_title'>
+					Quality score
+				</span>
+			</div>
+		</div>
+		<div class='row filter'>
+			<div class='col-md-12 filter_DP'>
+				<span class='panel_title'>
+					Read depth
+				</span>
+
+			</div>
+		</div>
+		<div class='row filter'>
+			<div class='col-md-12 filter_AC'>
+				<span class='panel_title'>
+					Amino Acids change
+				</span>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+<!-- File download progress  -->
+
+<div class="modal file-download">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class='modal-header'>
+                <h4>VCF file downloading... </h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress progress-popup">
+                    <div class="progress-bar progress-bar-success progress-bar-striped active"  aria-valuemin="0" aria-valuemax="100" ></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
